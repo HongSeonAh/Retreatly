@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_jwt_extended import JWTManager
 from extensions import db
 from users import users_bp
 
@@ -8,8 +9,12 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://retreatly:1234@localhost/retreatly'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# db 초기화
+# JWT 설정
+app.config['JWT_SECRET_KEY'] = 'aP!nJf*o_eiufn34%09jJ&fk@!'
+
+# db 및 JWT 초기화
 db.init_app(app)
+jwt = JWTManager(app)
 
 # Blueprint 등록
 app.register_blueprint(users_bp)
