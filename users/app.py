@@ -1,5 +1,5 @@
 from flask import request, jsonify
-from flask_jwt_extended import JWTManager, create_access_token
+from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required
 from werkzeug.security import check_password_hash
 
 from extensions import db
@@ -59,3 +59,75 @@ def login():
         return jsonify({'message': 'Login successful.', 'access_token': access_token}), 200
     else:
         return jsonify({'message': 'Invalid email or password.'}), 401
+
+# 호스트 정보 수정
+@users_bp.route('/host/<int:hostId>', methods=['PATCH'])
+@jwt_required()  # JWT 인증 필요
+def update_host(hostId):
+    # 현재 로그인한 사용자의 정보
+    identity = get_jwt_identity()
+    if identity['role'] != 'host':
+        return jsonify({'message': 'Only hosts can modify host information.'}), 403
+
+    # 로그인한 사용자가 요청한 리소스를 수정하려고 하는지 확인
+    if identity['email'] != Host.query.get(hostId).email:
+        return jsonify({'message': 'You are not authorized to modify this host information.'}), 403
+
+    data = request.get_json()
+    host = Host.query.get_or_404(hostId)
+
+    # 필드별 업데이트
+    host.name = data.get('name', host.name)
+    host.phone = data.get('phone', host.phone)
+
+    try:
+        db.session.commit()
+        # 업데이트된 정보를 포함하여 응답
+        return jsonify({
+            'message': 'Host information updated successfully.',
+            'updated_info': {
+                'id': host.id,
+                'email': host.email,
+                'name': host.name,
+                'phone': host.phone
+            }
+        }), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'message': 'Error occurred while updating host information.', 'error': str(e)}), 500
+
+# 게스트 정보 수정
+@users_bp.route('/guest/<int:guestId>', methods=['PATCH'])
+@jwt_required()  # JWT 인증 필요
+def update_guest(guestId):
+    # 현재 로그인한 사용자의 정보
+    identity = get_jwt_identity()
+    if identity['role'] != 'guest':
+        return jsonify({'message': 'Only guests can modify guest information.'}), 403
+
+    # 로그인한 사용자가 요청한 리소스를 수정하려고 하는지 확인
+    if identity['email'] != Guest.query.get(guestId).email:
+        return jsonify({'message': 'You are not authorized to modify this guest information.'}), 403
+
+    data = request.get_json()
+    guest = Guest.query.get_or_404(guestId)
+
+    # 필드별 업데이트
+    guest.name = data.get('name', guest.name)
+    guest.phone = data.get('phone', guest.phone)
+
+    try:
+        db.session.commit()
+        # 업데이트된 정보를 포함하여 응답
+        return jsonify({
+            'message': 'Guest information updated successfully.',
+            'updated_info': {
+                'id': guest.id,
+                'email': guest.email,
+                'name': guest.name,
+                'phone': guest.phone
+            }
+        }), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'message': 'Error occurred while updating guest information.', 'error': str(e)}), 500
