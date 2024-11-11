@@ -7,7 +7,7 @@ class Host(db.Model):
     __tablename__ = 'host'
 
     id = db.Column(db.BigInteger, primary_key=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)  # default 추가
     email = db.Column(db.String(255), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)

@@ -6,6 +6,7 @@ from extensions import db
 from users.guest.models import Guest
 from users.host.models import Host
 from users import users_bp  # Blueprint 임포트
+from datetime import datetime
 
 @users_bp.route('/user/signup', methods=['POST'])
 def signup():
@@ -70,15 +71,18 @@ def update_host(hostId):
         return jsonify({'message': 'Only hosts can modify host information.'}), 403
 
     # 로그인한 사용자가 요청한 리소스를 수정하려고 하는지 확인
-    if identity['email'] != Host.query.get(hostId).email:
+    host = Host.query.get_or_404(hostId)
+    if identity['email'] != host.email:
         return jsonify({'message': 'You are not authorized to modify this host information.'}), 403
 
     data = request.get_json()
-    host = Host.query.get_or_404(hostId)
 
     # 필드별 업데이트
     host.name = data.get('name', host.name)
     host.phone = data.get('phone', host.phone)
+
+    # 수정 일자 갱신
+    host.updated_at = datetime.utcnow()  # 수동으로 updated_at을 업데이트
 
     try:
         db.session.commit()
@@ -89,7 +93,8 @@ def update_host(hostId):
                 'id': host.id,
                 'email': host.email,
                 'name': host.name,
-                'phone': host.phone
+                'phone': host.phone,
+                'updated_at': host.updated_at  # 업데이트된 시간 포함
             }
         }), 200
     except Exception as e:
@@ -106,15 +111,18 @@ def update_guest(guestId):
         return jsonify({'message': 'Only guests can modify guest information.'}), 403
 
     # 로그인한 사용자가 요청한 리소스를 수정하려고 하는지 확인
-    if identity['email'] != Guest.query.get(guestId).email:
+    guest = Guest.query.get_or_404(guestId)
+    if identity['email'] != guest.email:
         return jsonify({'message': 'You are not authorized to modify this guest information.'}), 403
 
     data = request.get_json()
-    guest = Guest.query.get_or_404(guestId)
 
     # 필드별 업데이트
     guest.name = data.get('name', guest.name)
     guest.phone = data.get('phone', guest.phone)
+
+    # 수정 일자 갱신
+    guest.updated_at = datetime.utcnow()  # 수동으로 updated_at을 업데이트
 
     try:
         db.session.commit()
@@ -125,7 +133,8 @@ def update_guest(guestId):
                 'id': guest.id,
                 'email': guest.email,
                 'name': guest.name,
-                'phone': guest.phone
+                'phone': guest.phone,
+                'updated_at': guest.updated_at  # 업데이트된 시간 포함
             }
         }), 200
     except Exception as e:
