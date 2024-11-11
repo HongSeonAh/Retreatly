@@ -1,5 +1,7 @@
 from flask import Flask
 from flask_jwt_extended import JWTManager
+
+from admin.app import admin_bp
 from extensions import db
 from users import users_bp
 
@@ -18,6 +20,7 @@ jwt = JWTManager(app)
 
 # Blueprint 등록
 app.register_blueprint(users_bp)
+app.register_blueprint(admin_bp)
 
 @app.route('/')
 def hello_world():
