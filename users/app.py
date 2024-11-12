@@ -140,3 +140,38 @@ def update_guest(guestId):
     except Exception as e:
         db.session.rollback()
         return jsonify({'message': 'Error occurred while updating guest information.', 'error': str(e)}), 500
+
+# 게스트 정보 전체 조회 (JWT 인증 없음)
+@users_bp.route('/guest/list', methods=['GET'])
+def get_all_guests():
+    guests = Guest.query.all()
+    guest_list = [
+        {
+            'id': guest.id,
+            'email': guest.email,
+            'name': guest.name,
+            'phone': guest.phone,
+            'created_at': guest.created_at,
+            'updated_at': guest.updated_at
+        } for guest in guests
+    ]
+
+    return jsonify({'guests': guest_list}), 200
+
+
+# 호스트 정보 전체 조회 (JWT 인증 없음)
+@users_bp.route('/host/list', methods=['GET'])
+def get_all_hosts():
+    hosts = Host.query.all()
+    host_list = [
+        {
+            'id': host.id,
+            'email': host.email,
+            'name': host.name,
+            'phone': host.phone,
+            'created_at': host.created_at,
+            'updated_at': host.updated_at
+        } for host in hosts
+    ]
+
+    return jsonify({'hosts': host_list}), 200
