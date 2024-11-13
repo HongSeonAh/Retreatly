@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>숙소 수정</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body>
+    <h1>숙소 수정</h1>
+    <form id="editHouseForm">
+      <input
+        type="hidden"
+        id="house_id"
+        name="house_id"
+        value="{{ house.id }}"
+      />
+
+      <label for="name">숙소 이름:</label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        value="{{ house.name }}"
+        required
+      /><br />
+
+      <label for="address">주소:</label>
+      <input
+        type="text"
+        id="address"
+        name="address"
+        value="{{ house.address }}"
+        required
+      /><br />
+
+      <label for="description">설명:</label>
+      <textarea id="description" name="description" required>
+{{ house.description }}</textarea
+      ><br />
+
+      <label for="introduce">소개글:</label>
+      <input
+        type="text"
+        id="introduce"
+        name="introduce"
+        value="{{ house.introduce }}"
+      /><br />
+
+      <label for="max_people">최대 인원:</label>
+      <input
+        type="number"
+        id="max_people"
+        name="max_people"
+        value="{{ house.max_people }}"
+        required
+      /><br />
+
+      <label for="price_per_person">1인당 가격:</label>
+      <input
+        type="number"
+        id="price_per_person"
+        name="price_per_person"
+        value="{{ house.price_per_person }}"
+        required
+      /><br />
+
+      <label for="price_per_day">하루 가격:</label>
+      <input
+        type="number"
+        id="price_per_day"
+        name="price_per_day"
+        value="{{ house.price_per_day }}"
+        required
+      /><br />
+
+      <button type="submit">수정</button>
+    </form>
+
+    <script src="{{ url_for('static', filename='js/houses.js') }}"></script>
+  </body>
+</html>
