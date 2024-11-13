@@ -38,6 +38,21 @@ def create_house():
     return jsonify({'message': 'House created successfully.'}), 201
 
 
+# 숙소 수정 폼을 보여주는 GET 요청
+@houses_bp.route('/house/<int:house_id>/edit', methods=['GET'])
+@jwt_required()
+def edit_house(house_id):
+    identity = get_jwt_identity()
+    house = House.query.get_or_404(house_id)
+
+    # 호스트가 해당 숙소의 호스트인지 확인
+    if house.host.email != identity['email']:
+        return jsonify({'message': 'You are not authorized to edit this house.'}), 403
+
+    return render_template('house/edit_house.html', house=house)
+
+
+#숙소 수정 요청
 @houses_bp.route('/house/<int:house_id>', methods=['PATCH'])
 @jwt_required()
 def update_house(house_id):
@@ -64,6 +79,21 @@ def update_house(house_id):
     return jsonify({'message': 'House updated successfully.'}), 200
 
 
+# 숙소 삭제 폼을 보여주는 GET 요청
+@houses_bp.route('/house/<int:house_id>/delete', methods=['GET'])
+@jwt_required()
+def delete_house_form(house_id):
+    identity = get_jwt_identity()
+    house = House.query.get_or_404(house_id)
+
+    # 호스트가 해당 숙소의 호스트인지 확인
+    if house.host.email != identity['email']:
+        return jsonify({'message': 'You are not authorized to delete this house.'}), 403
+
+    return render_template('house/delete_house.html', house_id=house_id)
+
+
+# 숙소 삭제 요청
 @houses_bp.route('/house/<int:house_id>', methods=['DELETE'])
 @jwt_required()
 def delete_house(house_id):
