@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>내 숙소 목록</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/host_houses.css') }}"
+    />
+  </head>
+  <body>
+    <h1>내 숙소 목록</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>숙소 이름</th>
+          <th>주소</th>
+          <th>수정하기</th>
+          <th>삭제하기</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for house in houses %}
+        <tr>
+          <td>{{ house.name }}</td>
+          <td>{{ house.address }}</td>
+          <td><button onclick="editHouse({{ house.id }})">수정하기</button></td>
+          <td>
+            <button onclick="confirmDelete({{ house.id }})">삭제하기</button>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="4">숙소가 없습니다.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- 숙소 삭제 확인 모달 -->
+    <div id="deleteModal" style="display: none">
+      <p>정말로 이 숙소를 삭제하시겠습니까?</p>
+      <button id="confirmDelete">삭제</button>
+      <button onclick="closeDeleteModal()">취소</button>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/houses.js') }}"></script>
+  </body>
+</html>
