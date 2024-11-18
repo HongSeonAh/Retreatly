@@ -97,7 +97,6 @@ def update_house(house_id):
     house.price_per_day = data.get('price_per_day', house.price_per_day)
     house.updated_at = datetime.utcnow()
 
-    # Add new images
     for file in files:
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
@@ -112,20 +111,6 @@ def update_house(house_id):
     return jsonify({'message': 'House updated successfully with images.'}), 200
 
 
-
-
-# # 숙소 삭제 폼을 보여주는 GET 요청
-# @houses_bp.route('/house/<int:house_id>/delete', methods=['GET'])
-# @jwt_required()
-# def delete_house_form(house_id):
-#     identity = get_jwt_identity()
-#     house = House.query.get_or_404(house_id)
-
-#     # 호스트가 해당 숙소의 호스트인지 확인
-#     if house.host.email != identity['email']:
-#         return jsonify({'message': 'You are not authorized to delete this house.'}), 403
-
-#     return render_template('house/delete_house.html', house_id=house_id)
 
 
 # 숙소 삭제 요청
@@ -182,7 +167,7 @@ def get_host_houses_data():
             'id': house.id,
             'name': house.name,
             'address': house.address,
-            'images': [image.data for image in house.images]  # 이미지 포함
+            # 'images': [image.data for image in house.images]  # 이미지 포함
         })
 
     return jsonify(houses_data), 200

@@ -13,7 +13,6 @@ document.getElementById("signupForm")?.addEventListener("submit", async (e) => {
   };
 
   try {
-    console.log("21321312");
     const response = await fetch(`${apiUrl}/user/signup`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -46,6 +45,8 @@ document.getElementById("loginForm")?.addEventListener("submit", async (e) => {
     document.getElementById("loginMessage").innerText = result.message;
     if (result.access_token) {
       localStorage.setItem("jwt_token", result.access_token);
+      // 로그인 성공 시 호스트 숙소 조회 페이지로 리디렉션
+      window.location.href = "/host-houses";
     }
   } catch (error) {
     console.error("Error:", error);
