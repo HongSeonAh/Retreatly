@@ -7,7 +7,7 @@ class House(db.Model):
     id = db.Column(db.BigInteger, primary_key=True)
     created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
-    address = db.Column(db.String(255))
+    address = db.Column(db.String(500))
     description = db.Column(db.String(255))
     introduce = db.Column(db.String(255))
     max_people = db.Column(db.Integer)
