@@ -3,29 +3,22 @@ document
   .addEventListener("submit", function (event) {
     event.preventDefault();
 
-    // 폼에서 값 가져오기
-    const data = {
-      name: document.getElementById("name").value,
-      address: document.getElementById("address").value,
-      description: document.getElementById("description").value,
-      introduce: document.getElementById("introduce").value,
-      max_people: document.getElementById("max_people").value,
-      price_per_person: document.getElementById("price_per_person").value,
-      price_per_day: document.getElementById("price_per_day").value,
-    };
+    const formData = new FormData(this); // FormData 객체 사용
+
+    const token = localStorage.getItem("jwt_token"); // JWT 토큰 가져오기
 
     // API 호출
     fetch("/api/house", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt_token")}`, // JWT 토큰
+        Authorization: `Bearer ${token}`, // JWT 토큰
+        // Content-Type은 FormData를 사용할 때 설정하지 않아도 됩니다.
       },
-      body: JSON.stringify(data),
+      body: formData, // FormData 객체를 body로 설정
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data.message === "House created successfully.") {
+        if (data.message === "House created successfully with images.") {
           alert("숙소 등록 성공!");
           window.location.href = "/house"; // 성공 후 숙소 리스트 페이지로 리디렉션
         } else {
@@ -43,29 +36,27 @@ document
   .addEventListener("submit", function (event) {
     event.preventDefault();
 
+    const formData = new FormData(this); // FormData 객체 사용
     const houseId = document.getElementById("house_id").value; // 수정할 숙소의 ID
-    const data = {
-      name: document.getElementById("name").value,
-      address: document.getElementById("address").value,
-      description: document.getElementById("description").value,
-      introduce: document.getElementById("introduce").value,
-      max_people: document.getElementById("max_people").value,
-      price_per_person: document.getElementById("price_per_person").value,
-      price_per_day: document.getElementById("price_per_day").value,
-    };
+    const token = localStorage.getItem("jwt_token"); // JWT 토큰 가져오기
+
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
 
     // 수정 요청 보내기
     fetch(`/api/house/${houseId}`, {
       method: "PATCH",
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt_token")}`, // JWT 토큰
+        Authorization: `Bearer ${token}`, // JWT 토큰을 헤더에 포함
+        // 'Content-Type'은 FormData를 사용할 때 설정하지 않아도 됩니다.
       },
-      body: JSON.stringify(data),
+      body: formData, // FormData 객체를 body로 설정
     })
       .then((response) => response.json())
       .then((data) => {
-        if (data.message === "House updated successfully.") {
+        if (data.message === "House updated successfully with images.") {
           alert("숙소 수정 성공!");
           window.location.href = "/house"; // 수정 후 숙소 리스트 페이지로 리디렉션
         } else {

@@ -1,4 +1,4 @@
-from flask import request, jsonify
+from flask import render_template, request, jsonify
 from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required
 from werkzeug.security import check_password_hash
 
@@ -7,6 +7,21 @@ from users.guest.models import Guest
 from users.host.models import Host
 from users import users_bp  # Blueprint 임포트
 from datetime import datetime
+
+@users_bp.route('/base', methods=['GET'])
+def home():
+    return render_template('user/base.html')
+
+
+@users_bp.route('/loginForm', methods=['GET'])
+def loginForm():
+    return render_template('user/login.html')
+
+
+@users_bp.route('/signupForm', methods=['GET'])
+def signupForm():
+    return render_template('user/signup.html')
+
 
 @users_bp.route('/user/signup', methods=['POST'])
 def signup():

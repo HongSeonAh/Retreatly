@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up - RETREATLY</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/user_style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>RETREATLY</h1>
+      </header>
+
+      <nav>
+        <ul>
+          <li><a href="/signupForm">회원가입</a></li>
+          <li><a href="/loginForm">로그인</a></li>
+        </ul>
+      </nav>
+
+      <main>
+        <section id="signup">
+          <h2>Sign Up</h2>
+          <form id="signupForm">
+            <label for="role">Role:</label>
+            <select id="role" name="role" required>
+              <option value="guest">Guest</option>
+              <option value="host">Host</option>
+            </select>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required />
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required />
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required />
+            <label for="phone">Phone:</label>
+            <input type="tel" id="phone" name="phone" />
+            <button type="submit">Sign Up</button>
+          </form>
+          <p id="signupMessage"></p>
+        </section>
+      </main>
+    </div>
+    <script src="{{ url_for('static', filename='js/user_scripts.js') }}"></script>
+  </body>
+</html>
