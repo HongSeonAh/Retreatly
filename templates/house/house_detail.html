@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ house.name }} - RETREATLY</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/house_list.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>RETREATLY</h1>
+        <p>{{ house.name }}의 상세 정보</p>
+      </header>
+
+      <main>
+        <!-- 숙소 정보 -->
+        <h2>{{ house.name }}</h2>
+        <p><strong>가격 (하루):</strong> {{ house.price_per_day }} 원</p>
+        <p><strong>가격 (1인당):</strong> {{ house.price_per_person }} 원</p>
+        <p><strong>주소:</strong> {{ house.address }}</p>
+        <p><strong>설명:</strong> {{ house.description }}</p>
+        <p><strong>숙소 소개:</strong> {{ house.introduce }}</p>
+        <p><strong>최대 인원:</strong> {{ house.max_people }} 명</p>
+        <p>
+          <strong>생성일:</strong> {{ house.created_at.strftime('%Y-%m-%d
+          %H:%M:%S') }}
+        </p>
+        <p>
+          <strong>수정일:</strong> {{ house.updated_at.strftime('%Y-%m-%d
+          %H:%M:%S') }}
+        </p>
+
+        <h3>이미지</h3>
+        <div class="image-gallery">
+          {% for image in house.images %}
+          <img src="{{ image }}" alt="House Image" width="150" />
+          {% endfor %}
+        </div>
+      </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/houses.js') }}"></script>
+  </body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>숙소 리스트 - RETREATLY</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/house_list.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>RETREATLY</h1>
+        <p>원하는 숙소를 찾아보세요!</p>
+      </header>
+
+      <main>
+        <table class="house-table">
+          <thead>
+            <tr>
+              <th>숙소 이미지</th>
+              <th>숙소 이름</th>
+              <th>하루당 가격</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for house in houses %}
+            <tr>
+              <td>
+                {% if house.image %}
+                <img src="{{ house.image }}" alt="House Image" width="150" />
+                {% else %}
+                <span>이미지 없음</span>
+                {% endif %}
+              </td>
+              <td>
+                <a href="/house/{{ house.id }}" class="house-name-link"
+                  >{{ house.name }}</a
+                >
+              </td>
+              <td>{{ house.price_per_day | round(0) }} 원</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </main>
+    </div>
+  </body>
+</html>

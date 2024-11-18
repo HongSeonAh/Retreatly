@@ -1,0 +1,61 @@
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+}
+
+.container {
+  width: 90%;
+  margin: auto;
+  overflow: hidden;
+}
+
+header {
+  background: #35424a;
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2em;
+}
+
+header p {
+  margin: 0;
+  font-size: 1.2em;
+}
+
+table.house-table {
+  width: 100%;
+  margin: 20px 0;
+  border-collapse: collapse;
+}
+
+table.house-table thead {
+  background: #35424a;
+  color: white;
+}
+
+table.house-table th,
+table.house-table td {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+table.house-table img {
+  border-radius: 5px;
+}
+
+table.house-table tr:nth-child(even) {
+  background: #f2f2f2;
+}
+
+.image-gallery img {
+  margin: 5px;
+  border-radius: 5px;
+}
