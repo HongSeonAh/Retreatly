@@ -173,3 +173,58 @@ def get_host_houses_data():
     return jsonify(houses_data), 200
 
 
+# 숙소 리스트 페이지 렌더링 및 데이터 조회
+@houses_bp.route('/houses', methods=['GET'])
+def house_list_page():
+    # 모든 숙소 리스트 가져오기
+    houses = db.session.query(House).all()
+
+    # 숙소 데이터와 첫 번째 이미지를 포함한 리스트 생성
+    house_list = []
+    for house in houses:
+        # 첫 번째 이미지를 찾고, 없으면 None을 설정
+        first_image = house.images[0].data if house.images else None
+        
+        # 이미지 경로를 static/uploads 경로로 변경
+        if first_image:
+            first_image = f"/static/{first_image.lstrip('static/')}"
+
+        
+        house_list.append({
+            'id': house.id,
+            'name': house.name,
+            'price_per_day': house.price_per_day,
+            'image': first_image
+        })
+
+    # 템플릿에 houses 데이터 전달
+    return render_template('house/house_list.html', houses=house_list)
+
+
+
+
+@houses_bp.route('/house/<int:house_id>', methods=['GET'])
+def house_detail_page(house_id):
+    # 숙소 데이터 조회
+    house = House.query.get_or_404(house_id)
+
+    # 이미지 경로들을 static/uploads 경로로 변경
+    house_images = [f"/static/{image.data.lstrip('static/')}" for image in house.images]
+
+    # 모든 숙소 정보와 이미지들을 포함한 데이터 반환
+    house_data = {
+        'id': house.id,
+        'name': house.name,
+        'price_per_day': house.price_per_day,
+        'price_per_person': house.price_per_person,
+        'address': house.address,
+        'description': house.description,
+        'introduce': house.introduce,
+        'max_people': house.max_people,
+        'images': house_images,
+        'created_at': house.created_at,
+        'updated_at': house.updated_at
+    }
+
+    # HTML 페이지에 데이터를 전달하여 렌더링
+    return render_template('house/house_detail.html', house=house_data)

@@ -138,3 +138,63 @@ document.getElementById("confirmDelete").addEventListener("click", function () {
       alert("숙소 삭제 중 오류가 발생했습니다.");
     });
 });
+
+// 숙소 이름을 클릭하면 개별 페이지로 이동
+function renderHouses(houses) {
+  const tableBody = document.querySelector(".house-table tbody");
+  tableBody.innerHTML = ""; // 기존 데이터 초기화
+
+  houses.forEach((house) => {
+    const row = document.createElement("tr");
+
+    // 이미지 셀
+    const imageCell = document.createElement("td");
+    if (house.image) {
+      const img = document.createElement("img");
+      img.src = house.image;
+      img.alt = "House Image";
+      img.width = 150;
+      imageCell.appendChild(img);
+    } else {
+      imageCell.textContent = "이미지 없음";
+    }
+    row.appendChild(imageCell);
+
+    // 숙소 이름 셀 (링크 추가)
+    const nameCell = document.createElement("td");
+    const link = document.createElement("a");
+    link.href = `/house/${house.id}`;
+    link.textContent = house.name;
+    nameCell.appendChild(link);
+    row.appendChild(nameCell);
+
+    // 하루당 가격 셀
+    const priceCell = document.createElement("td");
+    priceCell.textContent = `${house.price_per_day.toLocaleString()} 원`;
+    row.appendChild(priceCell);
+
+    tableBody.appendChild(row);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  // 이미지 갤러리 슬라이드 기능 (선택 사항)
+  let currentIndex = 0;
+  const images = document.querySelectorAll(".image-gallery img");
+  const totalImages = images.length;
+
+  function showImage(index) {
+    images.forEach((img, i) => {
+      img.style.display = i === index ? "block" : "none";
+    });
+  }
+
+  // 이미지 슬라이드쇼 제어
+  setInterval(function () {
+    currentIndex = (currentIndex + 1) % totalImages; // 인덱스를 순차적으로 변경
+    showImage(currentIndex);
+  }, 3000); // 3초마다 이미지 변경
+
+  // 첫 번째 이미지 보이기
+  showImage(currentIndex);
+});
