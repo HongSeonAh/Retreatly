@@ -69,12 +69,25 @@ def login():
 
     # 사용자가 존재하고 비밀번호가 일치하는지 확인
     if user and check_password_hash(user.password, password):
-        # JWT 토큰 생성
-        access_token = create_access_token(
-            identity={'role': 'guest' if isinstance(user, Guest) else 'host', 'email': email})
+        # JWT 토큰 생성 시 role, guest_id 또는 host_id를 포함
+        if isinstance(user, Guest):
+            identity = {
+                'role': 'guest',
+                'email': email,
+                'guest_id': user.id  # guest_id 추가
+            }
+        else:
+            identity = {
+                'role': 'host',
+                'email': email,
+                'host_id': user.id  # host_id 추가
+            }
+
+        access_token = create_access_token(identity=identity)
         return jsonify({'message': 'Login successful.', 'access_token': access_token}), 200
     else:
         return jsonify({'message': 'Invalid email or password.'}), 401
+
 
 # 호스트 정보 수정
 @users_bp.route('/host/<int:hostId>', methods=['PATCH'])
