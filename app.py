@@ -6,6 +6,7 @@ from admin.app import admin_bp
 from extensions import db
 from static.uploads.img_upload import set_upload_folder
 from users import users_bp
+from reservation import reservation_bp
 from house.app import houses_bp  
 
 app = Flask(__name__)
@@ -37,7 +38,8 @@ if not os.path.exists(app.config['UPLOAD_FOLDER']):
 # Blueprint 등록
 app.register_blueprint(users_bp)
 app.register_blueprint(admin_bp)
-app.register_blueprint(houses_bp)  
+app.register_blueprint(houses_bp)
+app.register_blueprint(reservation_bp)
 
 @app.route('/')
 def hello_world():
