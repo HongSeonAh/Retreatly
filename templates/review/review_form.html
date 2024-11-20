@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>리뷰 등록 - RETREATLY</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/review_register.css') }}"
+    />
+    <script src="{{ url_for('static', filename='js/review_form.js') }}"></script>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>리뷰 작성</h1>
+        <p>숙소 이름: {{ house.name }}</p>
+      </header>
+
+      <main>
+        <form id="reviewForm">
+          <input type="hidden" id="houseId" value="{{ house.id }}" />
+
+          <label for="title">리뷰 제목:</label>
+          <input type="text" id="title" name="title" required />
+
+          <label for="content">리뷰 내용:</label>
+          <textarea id="content" name="content" rows="5" required></textarea>
+
+          <label for="rating">별점 (1~5):</label>
+          <select id="rating" name="rating" required>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+          </select>
+
+          <button type="submit">리뷰 등록</button>
+        </form>
+
+        <p id="reviewMessage"></p>
+      </main>
+    </div>
+  </body>
+</html>

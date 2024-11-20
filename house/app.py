@@ -202,7 +202,7 @@ def house_list_page():
 
 
 
-
+# 숙소 상세 조회 
 @houses_bp.route('/house/<int:house_id>', methods=['GET'])
 def house_detail_page(house_id):
     # 숙소 데이터 조회
