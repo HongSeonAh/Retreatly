@@ -6,6 +6,8 @@ from .models import Review
 from house.models import House
 from reservation.models import Reservation
 from users.guest.models import Guest
+from comment.models import Comment
+from users.host.models import Host
 from review import review_bp
 
 
@@ -165,22 +167,60 @@ def get_reviews(house_id):
 
 
 # 리뷰 단일 조회
+# @review_bp.route('/api/review/<int:review_id>', methods=['GET'])
+# def get_review_detail(review_id):
+#     # 리뷰 가져오기
+#     review = Review.query.get_or_404(review_id)
+#     guest = Guest.query.get(review.guest_id)
+
+#     review_detail = {
+#         'review_id': review.id,
+#         'author': guest.name,  # 작성자 이름
+#         'title': review.title,
+#         'content': review.content,
+#         'rating': review.rating,
+#         'updated_at': review.updated_at.strftime('%Y-%m-%d %H:%M:%S')
+#     }
+
+#     return jsonify(review_detail), 200
 @review_bp.route('/api/review/<int:review_id>', methods=['GET'])
 def get_review_detail(review_id):
     # 리뷰 가져오기
     review = Review.query.get_or_404(review_id)
+    
+    # 리뷰 작성자 정보
     guest = Guest.query.get(review.guest_id)
 
+    # 리뷰에 달린 댓글들을 가져옵니다.
+    comments = Comment.query.filter_by(review_id=review_id).all()
+
+    # 댓글 정보 준비
+    comments_data = []
+    if comments:
+        for comment in comments:
+            host = Host.query.get(comment.host_id)  # 댓글을 작성한 호스트 정보
+            comments_data.append({
+                'comment_id': comment.id,
+                'host_name': host.name,  # 호스트 이름
+                'content': comment.content,
+                'created_at': comment.created_at.strftime('%Y-%m-%d %H:%M:%S')
+            })
+    else:
+        comments_data = []  # 댓글이 없는 경우 빈 리스트로 처리
+
+    # 리뷰 상세 정보
     review_detail = {
         'review_id': review.id,
         'author': guest.name,  # 작성자 이름
         'title': review.title,
         'content': review.content,
         'rating': review.rating,
-        'updated_at': review.updated_at.strftime('%Y-%m-%d %H:%M:%S')
+        'updated_at': review.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
+        'comments': comments_data  # 댓글 데이터 추가
     }
 
     return jsonify(review_detail), 200
+
 
 
 
