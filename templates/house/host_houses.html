@@ -7,6 +7,10 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/host_houses.css') }}"
     />
+    <script
+      defer
+      src="{{ url_for('static', filename='js/houses.js') }}"
+    ></script>
   </head>
   <body>
     <h1>내 숙소 목록</h1>
@@ -19,22 +23,7 @@
           <th>삭제하기</th>
         </tr>
       </thead>
-      <tbody>
-        {% for house in houses %}
-        <tr>
-          <td>{{ house.name }}</td>
-          <td>{{ house.address }}</td>
-          <td><button onclick="editHouse({{ house.id }})">수정하기</button></td>
-          <td>
-            <button onclick="confirmDelete({{ house.id }})">삭제하기</button>
-          </td>
-        </tr>
-        {% else %}
-        <tr>
-          <td colspan="4">숙소가 없습니다.</td>
-        </tr>
-        {% endfor %}
-      </tbody>
+      <tbody id="table-body"></tbody>
     </table>
 
     <!-- 숙소 삭제 확인 모달 -->
@@ -43,7 +32,5 @@
       <button id="confirmDelete">삭제</button>
       <button onclick="closeDeleteModal()">취소</button>
     </div>
-
-    <script src="{{ url_for('static', filename='js/houses.js') }}"></script>
   </body>
 </html>

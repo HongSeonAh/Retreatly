@@ -130,29 +130,21 @@ def delete_house(house_id):
 
     return jsonify({'message': 'House deleted successfully.'}), 200
 
-# 호스트 마이 숙소 조회 폼
+
+
+# 호스트 마이 숙소 조회 폼 및 데이터 조회를 한 번에 처리하는 API
 @houses_bp.route('/host-houses', methods=['GET'])
-@jwt_required()
-def render_host_houses():
-    identity = get_jwt_identity()
-    if identity['role'] != 'host':
-        return jsonify({'message': 'Only hosts can view their houses.'}), 403
-
-    host = Host.query.filter_by(email=identity['email']).first()
-    if not host:
-        return jsonify({'message': 'Host not found.'}), 404
-
-    houses = House.query.filter_by(host_id=host.id).all()
-    houses_data = [{'id': house.id, 'name': house.name, 'address': house.address} for house in houses]
-
-    return render_template('house/host_houses.html', houses=houses_data)
+def get_host_houses():
+    
+    return render_template('house/host_houses.html')
 
 
-# 호스트 마이 숙소 전체 조회
 @houses_bp.route('/api/host-houses', methods=['GET'])
 @jwt_required()
-def get_host_houses_data():
+def render_and_get_host_houses():
     identity = get_jwt_identity()
+    
+    # 호스트가 아니라면 403 오류
     if identity['role'] != 'host':
         return jsonify({'message': 'Only hosts can view their houses.'}), 403
 
@@ -160,17 +152,14 @@ def get_host_houses_data():
     if not host:
         return jsonify({'message': 'Host not found.'}), 404
 
+    # 호스트의 모든 숙소를 조회
     houses = House.query.filter_by(host_id=host.id).all()
-    houses_data = []
-    for house in houses:
-        houses_data.append({
-            'id': house.id,
-            'name': house.name,
-            'address': house.address,
-            # 'images': [image.data for image in house.images]  # 이미지 포함
-        })
 
-    return jsonify(houses_data), 200
+    # 숙소 데이터를 JSON 형식으로 준비
+    houses_data = [{'id': house.id, 'name': house.name, 'address': house.address} for house in houses]
+
+    # 템플릿 렌더링과 데이터 전달
+    return jsonify({'data' : houses_data}), 200
 
 
 # 숙소 리스트 페이지 렌더링 및 데이터 조회

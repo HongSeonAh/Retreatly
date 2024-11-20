@@ -1,6 +1,6 @@
 import os
-from flask import Flask, render_template, request
-from flask_jwt_extended import JWTManager
+from flask import Flask, jsonify, render_template, request
+from flask_jwt_extended import JWTManager, get_jwt_identity, jwt_required
 from flask_cors import CORS
 from admin.app import admin_bp
 from extensions import db
@@ -21,7 +21,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = 'aP!nJf*o_eiufn34%09jJ&fk@!'
 
 # CORS 설정에 Authorization 추가
-CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True, expose_headers=["Authorization"])
 
 # 디버깅: Authorization 헤더 확인 로그 추가
 @app.after_request
@@ -58,6 +58,12 @@ app.register_blueprint(comment_bp)
 @app.route('/')
 def hello_world():
     return 'Hello World!'
+
+@app.route('/api/validate-token', methods=['POST'])
+@jwt_required()
+def validate_token():
+    identity = get_jwt_identity()
+    return jsonify({"message": "Token is valid.", "identity": identity}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
