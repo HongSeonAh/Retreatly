@@ -46,6 +46,8 @@ document.getElementById("loginForm")?.addEventListener("submit", async (e) => {
     if (result.access_token) {
       localStorage.setItem("jwt_token", result.access_token);
       // 로그인 성공 시 호스트 숙소 조회 페이지로 리디렉션
+      console.log(localStorage.getItem("jwt_token"));
+
       window.location.href = "/host-houses";
     }
   } catch (error) {

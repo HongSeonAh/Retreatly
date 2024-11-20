@@ -1,3 +1,13 @@
+// 페이지가 로드될 때 JWT 토큰이 있는지 확인
+document.addEventListener("DOMContentLoaded", () => {
+  const token = localStorage.getItem("jwt_token");
+
+  // 토큰이 없으면 로그인 페이지로 리디렉션
+  if (!token) {
+    window.location.href = "/login"; // 로그인 페이지로 리디렉션
+  }
+});
+
 document
   .getElementById("registerHouseForm")
   .addEventListener("submit", function (event) {
