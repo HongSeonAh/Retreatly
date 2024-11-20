@@ -12,3 +12,6 @@ class Review(db.Model):
     updated_at = db.Column(db.DateTime, nullable=False)
     house_id = db.Column(db.BigInteger, db.ForeignKey('house.id'), nullable=False)
     guest_id = db.Column(db.BigInteger, db.ForeignKey('guest.id'), nullable=False)
+
+    house = db.relationship('House', backref=db.backref('reviews', lazy=True))  # 추가된 관계
+    guest = db.relationship('Guest', backref=db.backref('reviews', lazy=True))

@@ -9,6 +9,7 @@ from users import users_bp
 from reservation import reservation_bp
 from house.app import houses_bp  
 from review.app import review_bp
+from comment.app import comment_bp
 
 app = Flask(__name__)
 
@@ -51,6 +52,8 @@ app.register_blueprint(admin_bp)
 app.register_blueprint(houses_bp)
 app.register_blueprint(reservation_bp)
 app.register_blueprint(review_bp)
+app.register_blueprint(comment_bp)
+
 
 @app.route('/')
 def hello_world():
