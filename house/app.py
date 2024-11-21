@@ -59,22 +59,19 @@ def create_house():
 
     return jsonify({'message': 'House created successfully with images.'}), 201
 
+
+
+
 # 숙소 수정 폼을 보여주는 GET 요청
 @houses_bp.route('/house/<int:house_id>/editform', methods=['GET'])
-@jwt_required()
 def edit_house(house_id):
-    identity = get_jwt_identity()
     house = House.query.get_or_404(house_id)
-
-    # 호스트가 해당 숙소의 호스트인지 확인
-    if house.host.email != identity['email']:
-        return jsonify({'message': 'You are not authorized to edit this house.'}), 403
 
     return render_template('house/edit_house.html', house=house)
 
 
 # 숙소 수정 api
-@houses_bp.route('/api/house/<int:house_id>', methods=['PATCH'])
+@houses_bp.route('/api/house/<int:house_id>', methods=['POST'])
 @jwt_required()
 def update_house(house_id):
     identity = get_jwt_identity()
@@ -88,6 +85,7 @@ def update_house(house_id):
     data = request.form
     files = request.files.getlist('images')  # 수정 시 새 이미지 업로드
 
+    # 기존 데이터 업데이트
     house.address = data.get('address', house.address)
     house.description = data.get('description', house.description)
     house.introduce = data.get('introduce', house.introduce)
@@ -97,10 +95,11 @@ def update_house(house_id):
     house.price_per_day = data.get('price_per_day', house.price_per_day)
     house.updated_at = datetime.utcnow()
 
+    # 이미지 업로드 처리
     for file in files:
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)  # current_app 사용
+            filepath = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
             file.save(filepath)
 
             new_image = Image(data=filepath, house_id=house.id)
@@ -109,6 +108,8 @@ def update_house(house_id):
     db.session.commit()
 
     return jsonify({'message': 'House updated successfully with images.'}), 200
+
+
 
 
 
