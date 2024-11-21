@@ -155,3 +155,31 @@ def update_reservation_status(reservation_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({'message': 'Error occurred while updating reservation status.', 'error': str(e)}), 500
+
+# 예약 상세 조회 (게스트 및 호스트 모두 사용 가능)
+@reservation_bp.route('/reservation/<int:reservation_id>', methods=['GET'])
+@jwt_required()
+def get_reservation_details(reservation_id):
+    # 예약 ID로 예약을 조회
+    reservation = Reservation.query.get_or_404(reservation_id)
+
+    # JWT에서 사용자 정보 가져오기
+    identity = get_jwt_identity()
+
+    # 예약 상세 조회에 대한 접근 권한 체크 (게스트 또는 호스트)
+    if reservation.guest_id != identity.get('guest_id') and reservation.house.host_id != identity.get('host_id'):
+        return jsonify({'message': 'You are not authorized to view this reservation.'}), 403
+
+    # 예약 정보 반환
+    reservation_details = {
+        'id': reservation.id,
+        'start_date': reservation.start_date,
+        'end_date': reservation.end_date,
+        'house_id': reservation.house_id,
+        'guest_id': reservation.guest_id,
+        'status': reservation.status,  # 예약 상태
+        'created_at': reservation.created_at,
+        'updated_at': reservation.updated_at
+    }
+
+    return jsonify({'reservation': reservation_details}), 200
