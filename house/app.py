@@ -61,20 +61,14 @@ def create_house():
 
 # 숙소 수정 폼을 보여주는 GET 요청
 @houses_bp.route('/house/<int:house_id>/editform', methods=['GET'])
-@jwt_required()
 def edit_house(house_id):
-    identity = get_jwt_identity()
     house = House.query.get_or_404(house_id)
-
-    # 호스트가 해당 숙소의 호스트인지 확인
-    if house.host.email != identity['email']:
-        return jsonify({'message': 'You are not authorized to edit this house.'}), 403
 
     return render_template('house/edit_house.html', house=house)
 
 
 # 숙소 수정 api
-@houses_bp.route('/api/house/<int:house_id>', methods=['PATCH'])
+@houses_bp.route('/api/house/<int:house_id>', methods=['POST'])
 @jwt_required()
 def update_house(house_id):
     identity = get_jwt_identity()
@@ -109,6 +103,7 @@ def update_house(house_id):
     db.session.commit()
 
     return jsonify({'message': 'House updated successfully with images.'}), 200
+
 
 
 
