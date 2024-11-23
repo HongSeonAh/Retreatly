@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, render_template, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from datetime import datetime
 from extensions import db
@@ -6,26 +6,49 @@ from house.models import House
 from reservation.models import Reservation
 from reservation import reservation_bp  # Blueprint 임포트
 
-# 예약 생성
+
+@reservation_bp.route('/reservation/form/<int:house_id>', methods=['GET'])
+def reservation_form(house_id):
+    house = House.query.get_or_404(house_id)
+
+    # 이미 예약된 날짜들
+    reservations = Reservation.query.filter_by(house_id=house_id).all()
+    reserved_dates = [
+        {"start_date": r.start_date.strftime('%Y-%m-%d'), "end_date": r.end_date.strftime('%Y-%m-%d')}
+        for r in reservations
+    ]
+    
+    # 예약 폼을 위한 HTML 템플릿 반환
+    return render_template(
+        'reservation/reservation_form.html',
+        house_name=house.name,
+        host_name=house.host.name,
+        price_per_day=house.price_per_day,
+        max_people=house.max_people,
+        reserved_dates=reserved_dates
+    )
+
+
 @reservation_bp.route('/reservation', methods=['POST'])
 @jwt_required()
 def create_reservation():
     data = request.get_json()
 
-    if 'start_date' not in data or 'end_date' not in data or 'house_id' not in data:
-        return jsonify({'message': 'Start date, end date, and house ID are required.'}), 400
+    if 'start_date' not in data or 'end_date' not in data or 'house_id' not in data or 'num_guests' not in data:
+        return jsonify({'message': 'Start date, end date, house ID, and number of guests are required.'}), 400
 
     start_date = datetime.fromisoformat(data['start_date'])
     end_date = datetime.fromisoformat(data['end_date'])
     house_id = data['house_id']
+    num_guests = int(data['num_guests'])  # 문자열을 정수로 변환
 
     # JWT에서 사용자 정보 가져오기
     identity = get_jwt_identity()
 
     # 게스트만 예약할 수 있도록 로직 수정
     if identity['role'] == 'guest':
-        guest_id = identity.get('guest_id')  # 게스트의 경우 guest_id를 가져옴
-        if not guest_id:  # guest_id가 없으면 에러
+        guest_id = identity.get('guest_id')
+        if not guest_id:
             return jsonify({'message': 'Guest ID is required for reservation.'}), 400
     else:
         return jsonify({'message': 'Hosts cannot make reservations.'}), 400  # 호스트는 예약할 수 없음
@@ -44,16 +67,52 @@ def create_reservation():
     if existing_reservation:
         return jsonify({'message': 'The house is already reserved for this period.'}), 400
 
+    # 날짜 계산 및 결제 금액 계산
+    days = (end_date - start_date).days
+    if days <= 0:
+        return jsonify({'message': 'End date must be after start date.'}), 400
+
+    price_per_day = house.price_per_day
+    total_amount = days * price_per_day
+    details = f"숙박 {days}박 x 1박당 {price_per_day}원"
+
+    # 추가 인원 체크
+    if num_guests > house.max_people:
+        extra_guests = num_guests - house.max_people
+        extra_charge = extra_guests * days * (price_per_day / house.max_people)
+        total_amount += extra_charge
+        details += f" + 추가 인원 {extra_guests}명 ({extra_charge}원)"
+
     # 예약 생성
     new_reservation = Reservation(start_date=start_date, end_date=end_date, house_id=house_id, guest_id=guest_id)
 
     try:
         db.session.add(new_reservation)
         db.session.commit()
-        return jsonify({'message': 'Reservation created successfully.'}), 201
+        
+        # 예약 성공 후, 결제 내역 반환
+        return jsonify({
+            'message': 'Reservation created successfully.',
+            'total_amount': total_amount,
+            'calculation_details': details
+        }), 201
     except Exception as e:
         db.session.rollback()
         return jsonify({'message': 'Error occurred while creating reservation.', 'error': str(e)}), 500
+
+
+@reservation_bp.route('/reservation/success', methods=['GET'])
+def reservation_success():
+    total_amount = request.args.get('total_amount')
+    calculation_details = request.args.get('calculation_details')
+
+    return render_template(
+        'reservation/reservation_success.html',
+        total_amount=total_amount,
+        calculation_details=calculation_details
+    )
+
+
 
 # 예약 조회 (게스트)
 @reservation_bp.route('/reservation/guest', methods=['GET'])

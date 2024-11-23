@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>예약 신청</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/reservation.css') }}"
+    />
+    <script
+      defer
+      src="{{ url_for('static', filename='js/reservation.js') }}"
+    ></script>
+  </head>
+  <body>
+    <h1>예약 신청</h1>
+    <form id="reservationForm">
+      <p>
+        <strong>숙소 이름:</strong> <span id="houseName">{{ house_name }}</span>
+      </p>
+      <p>
+        <strong>호스트 이름:</strong> <span id="hostName">{{ host_name }}</span>
+      </p>
+      <p>
+        <strong>1박당 가격:</strong>
+        <span id="pricePerDay">{{ price_per_day }}</span>원
+      </p>
+      <p>
+        <strong>최대 인원:</strong>
+        <span id="maxPeople">{{ max_people }}</span>명
+      </p>
+
+      <label for="startDate">숙박 시작 날짜:</label>
+      <input type="date" id="startDate" name="start_date" required />
+      <label for="endDate">퇴실 날짜:</label>
+      <input type="date" id="endDate" name="end_date" required />
+      <label for="numGuests">숙박 인원:</label>
+      <input
+        type="number"
+        id="numGuests"
+        name="num_guests"
+        min="1"
+        max="{{ max_people }}"
+        required
+      />
+
+      <p><strong>예약된 날짜:</strong></p>
+      <div id="reservedDatesCalendar">
+        {% for date in reserved_dates %}
+        <div>{{ date.start_date }} ~ {{ date.end_date }}</div>
+        {% endfor %}
+      </div>
+
+      <p><strong>결제 금액:</strong> <span id="totalAmount"></span>원</p>
+      <p id="calculationDetails"></p>
+      <p><strong>결제 안내:</strong> 무통장 입금을 통해 결제해주세요.</p>
+
+      <button type="submit">예약하기</button>
+    </form>
+  </body>
+</html>
