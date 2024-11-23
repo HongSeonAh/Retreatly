@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>결제 내역</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/reservation.css') }}"
+    />
+    <script
+      defer
+      src="{{ url_for('static', filename='js/reservation.js') }}"
+    ></script>
+  </head>
+  <body>
+    <h1>예약 완료</h1>
+    <p><strong>결제 금액:</strong> {{ total_amount }}원</p>
+    <p><strong>상세 계산 내역:</strong></p>
+    <p>{{ calculation_details }}</p>
+    <p><strong>결제 안내:</strong> 무통장 입금을 통해 결제해주세요.</p>
+    <button onclick="window.location.href='/houses'">홈으로 가기</button>
+  </body>
+</html>

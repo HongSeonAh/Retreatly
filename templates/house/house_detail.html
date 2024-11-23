@@ -20,7 +20,10 @@
         <!-- 숙소 정보 -->
         <h2>{{ house.name }}</h2>
         <p><strong>가격 (하루):</strong> {{ house.price_per_day }} 원</p>
-        <p><strong>가격 (1인당):</strong> {{ house.price_per_person }} 원</p>
+        <p>
+          <strong>가격 (1인당 추가비용):</strong> {{ house.price_per_person }}
+          원
+        </p>
         <p><strong>주소:</strong> {{ house.address }}</p>
         <p><strong>설명:</strong> {{ house.description }}</p>
         <p><strong>숙소 소개:</strong> {{ house.introduce }}</p>
@@ -39,6 +42,13 @@
           {% for image in house.images %}
           <img src="{{ image }}" alt="House Image" width="150" />
           {% endfor %}
+        </div>
+
+        <!-- 예약하러 가기 버튼 -->
+        <div class="reservation-button">
+          <a href="/reservation/form/{{ house.id }}">
+            <button type="button">예약하러 가기</button>
+          </a>
         </div>
       </main>
     </div>

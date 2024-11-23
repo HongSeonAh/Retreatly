@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>내 예약 목록</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/guest_reservations.css') }}"
+    />
+    <script
+      defer
+      src="{{ url_for('static', filename='js/guest_reserv.js') }}"
+    ></script>
+  </head>
+  <body>
+    <h1>내 예약 목록</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>숙소 이름</th>
+          <th>예약 날짜</th>
+          <th>예약 상태</th>
+        </tr>
+      </thead>
+      <tbody id="reservationTableBody">
+        <!-- JS에서 데이터를 동적으로 추가 -->
+      </tbody>
+    </table>
+  </body>
+</html>
