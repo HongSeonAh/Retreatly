@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>예약 상세</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/reservation_details.css') }}"
+    />
+    <script
+      defer
+      src="{{ url_for('static', filename='js/reservation_details.js') }}"
+    ></script>
+  </head>
+  <body>
+    <h1>예약 상세</h1>
+
+    <div>
+      <p>
+        <strong>숙소 이름:</strong>
+        <span id="houseName">로딩 중...</span>
+      </p>
+      <p>
+        <strong>예약자:</strong>
+        <span id="guestName">로딩 중...</span>
+      </p>
+      <p>
+        <strong>숙박 기간:</strong>
+        <span id="dates">로딩 중...</span>
+      </p>
+      <p>
+        <strong>최종 결제 금액:</strong>
+        <span id="totalAmount">로딩 중...</span>원
+      </p>
+      <p>
+        <strong>예약 신청 날짜:</strong>
+        <span id="createdAt">로딩 중...</span>
+      </p>
+      <p>
+        <strong>예약 상태:</strong>
+        <span id="status">로딩 중...</span>
+      </p>
+    </div>
+
+    <!-- 게스트가 예약을 취소할 수 있는 버튼 -->
+    <div id="guestActions" style="display: none">
+      <button id="cancelReservationBtn">예약 취소</button>
+    </div>
+
+    <!-- 호스트가 승인/거부할 수 있는 버튼 -->
+    <div id="hostActions" style="display: none">
+      <button id="approveReservationBtn">예약 승인</button>
+      <button id="rejectReservationBtn">예약 거부</button>
+    </div>
+  </body>
+</html>

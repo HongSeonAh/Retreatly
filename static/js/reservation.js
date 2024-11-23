@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       try {
         const token = localStorage.getItem("jwt_token");
-        const response = await fetch("/reservation", {
+        const response = await fetch("/api/reservation", {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
