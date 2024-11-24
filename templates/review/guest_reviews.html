@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>내 리뷰 목록</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/guest_reviews.css') }}"
+    />
+    <script
+      defer
+      src="{{ url_for('static', filename='js/guest_reviews.js') }}"
+    ></script>
+  </head>
+  <body>
+    <h1>내 리뷰 목록</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>숙소 이름</th>
+          <th>리뷰 제목</th>
+          <th>평점</th>
+          <th>작성일</th>
+        </tr>
+      </thead>
+      <tbody id="reviewTableBody">
+        <!-- 리뷰 목록이 동적으로 추가됩니다. -->
+      </tbody>
+    </table>
+  </body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>리뷰 상세</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/review_detail.css') }}"
+    />
+    <script
+      defer
+      src="{{ url_for('static', filename='js/review_detail.js') }}"
+    ></script>
+  </head>
+  <body>
+    <h1>리뷰 상세</h1>
+    <div id="reviewDetail">
+      <h2 id="reviewTitle">로딩 중...</h2>
+      <p><strong>작성자:</strong> <span id="reviewAuthor">로딩 중...</span></p>
+      <p><strong>평점:</strong> <span id="reviewRating">로딩 중...</span></p>
+      <p><strong>내용:</strong></p>
+      <p id="reviewContent">로딩 중...</p>
+      <p>
+        <strong>수정일:</strong> <span id="reviewUpdatedAt">로딩 중...</span>
+      </p>
+    </div>
+
+    <!-- 댓글 영역 -->
+    <h3>댓글</h3>
+    <ul id="commentList">
+      <!-- 댓글이 동적으로 추가됩니다. -->
+    </ul>
+
+    <!-- 호스트용 버튼 -->
+    <div id="hostActions" style="display: none">
+      <button id="addCommentBtn">답변 작성</button>
+      <button id="editCommentBtn" style="display: none">답변 수정</button>
+      <button id="deleteCommentBtn" style="display: none">답변 삭제</button>
+    </div>
+  </body>
+</html>

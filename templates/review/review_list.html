@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>숙소 리뷰 목록</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/review_list.css') }}"
+    />
+    <script
+      defer
+      src="{{ url_for('static', filename='js/review_list.js') }}"
+    ></script>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>리뷰 목록</h1>
+        <p>숙소 ID: {{ house_id }}</p>
+      </header>
+
+      <main>
+        <!-- 총 평점 -->
+        <div class="average-rating">
+          <strong>총 평점:</strong>
+          <span id="averageRating">로딩 중...</span>
+        </div>
+
+        <!-- 리뷰 테이블 -->
+        <table>
+          <thead>
+            <tr>
+              <th>리뷰 제목</th>
+              <th>작성자</th>
+              <th>평점</th>
+            </tr>
+          </thead>
+          <tbody id="reviewTableBody">
+            <!-- 리뷰 데이터는 JS에서 동적으로 추가 -->
+          </tbody>
+        </table>
+
+        <!-- 리뷰 작성 버튼 -->
+        <div class="review-actions">
+          <button id="writeReviewButton" style="display: none">
+            리뷰 작성
+          </button>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
