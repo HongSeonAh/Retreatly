@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>리뷰 수정</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/edit_review_form.css') }}"
+    />
+    <script defer src="{{ url_for('static', filename='js/edit_review_form.js') }}"></script>
+  </head>
+  <body>
+    <h1>리뷰 수정</h1>
+    <form id="editReviewForm">
+      <input type="hidden" id="reviewId" value="{{ review.id }}" />
+      
+      <label for="title">리뷰 제목:</label>
+      <input type="text" id="title" name="title" value="{{ review.title }}" required />
+
+      <label for="content">리뷰 내용:</label>
+      <textarea id="content" name="content" rows="5" required>{{ review.content }}</textarea>
+
+      <label for="rating">별점 (1~5):</label>
+      <select id="rating" name="rating" required>
+        <option value="1" {% if review.rating == 1 %}selected{% endif %}>1</option>
+        <option value="2" {% if review.rating == 2 %}selected{% endif %}>2</option>
+        <option value="3" {% if review.rating == 3 %}selected{% endif %}>3</option>
+        <option value="4" {% if review.rating == 4 %}selected{% endif %}>4</option>
+        <option value="5" {% if review.rating == 5 %}selected{% endif %}>5</option>
+      </select>
+
+      <button type="submit">리뷰 수정</button>
+    </form>
+
+    <p id="message"></p>
+  </body>
+</html>

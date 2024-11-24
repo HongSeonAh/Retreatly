@@ -78,8 +78,18 @@ def create_review():
         return jsonify({'message': 'Error creating review.', 'error': str(e)}), 500
 
 
+# 게스트 리뷰 수정 폼 렌더링
+@review_bp.route('/review-form/edit/<int:review_id>', methods=['GET'])
+def render_edit_review_form(review_id):
+
+    review = Review.query.get_or_404(review_id)
+
+    return render_template('review/edit_review_form.html', review=review)
+
+
+
 # 게스트 리뷰 수정
-@review_bp.route('/api/review/<int:review_id>', methods=['PATCH'])
+@review_bp.route('/api/review/<int:review_id>', methods=['POST'])
 @jwt_required()
 def update_review(review_id):
     identity = get_jwt_identity()
@@ -240,9 +250,9 @@ def get_review_detail(review_id):
 
 
 # 게스트 자신이 작성한 리뷰 목록 조회 (HTML 렌더링)
-@review_bp.route('/my-reviews', methods=['GET'])
+@review_bp.route('/guest-reviews', methods=['GET'])
 def render_my_reviews_page():
-    return render_template('reviews/guest_reviews.html')
+    return render_template('review/guest_reviews.html')
 
 
 
