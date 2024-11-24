@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>답변 수정</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/edit_comment_form.css') }}"
+    />
+    <script
+      defer
+      src="{{ url_for('static', filename='js/edit_comment_form.js') }}"
+    ></script>
+  </head>
+  <body>
+    <h1>답변 수정</h1>
+    <form id="editCommentForm">
+      <input type="hidden" id="commentId" value="{{ comment.id }}" />
+      <label for="content">답변 내용:</label>
+      <textarea id="content" name="content" rows="5" required>
+{{ comment.content }}</textarea
+      >
+      <button type="submit">수정하기</button>
+    </form>
+    <p id="editCommentMessage"></p>
+  </body>
+</html>

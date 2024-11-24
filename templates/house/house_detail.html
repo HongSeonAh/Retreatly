@@ -44,11 +44,21 @@
           {% endfor %}
         </div>
 
-        <!-- 예약하러 가기 버튼 -->
-        <div class="reservation-button">
-          <a href="/reservation/form/{{ house.id }}">
-            <button type="button">예약하러 가기</button>
-          </a>
+        <!-- 버튼 섹션 -->
+        <div class="action-buttons">
+          <!-- 예약하러 가기 버튼 -->
+          <div class="reservation-button">
+            <a href="/reservation/form/{{ house.id }}">
+              <button type="button">예약하러 가기</button>
+            </a>
+          </div>
+
+          <!-- 리뷰 보러가기 버튼 -->
+          <div class="review-button">
+            <a href="/reviews/house/{{ house.id }}">
+              <button type="button">리뷰 보러가기</button>
+            </a>
+          </div>
         </div>
       </main>
     </div>

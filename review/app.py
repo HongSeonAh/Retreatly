@@ -11,20 +11,22 @@ from users.host.models import Host
 from review import review_bp
 
 
+@review_bp.route('/api/auth/me', methods=['GET'])
+@jwt_required()
+def get_user_info():
+    """현재 로그인한 사용자 정보를 반환"""
+    identity = get_jwt_identity()  # JWT에서 사용자 정보 추출
+    return jsonify(identity), 200
+
 # 리뷰 등록 폼
 @review_bp.route('/review-form/<int:house_id>', methods=['GET'])
-@jwt_required()
 def review_form(house_id):
-    print(f"Authorization Header: {request.headers.get('Authorization')}")
-    identity = get_jwt_identity()
-    if identity['role'] != 'guest':
-        return jsonify({'message': 'Only guests can access the review form.'}), 403
 
     # 숙소 확인
     house = House.query.get_or_404(house_id)
 
     # 렌더링할 템플릿에 숙소 정보 전달
-    return render_template('review_form.html', house=house)
+    return render_template('review/review_form.html', house=house)
 
 
 
@@ -76,8 +78,18 @@ def create_review():
         return jsonify({'message': 'Error creating review.', 'error': str(e)}), 500
 
 
+# 게스트 리뷰 수정 폼 렌더링
+@review_bp.route('/review-form/edit/<int:review_id>', methods=['GET'])
+def render_edit_review_form(review_id):
+
+    review = Review.query.get_or_404(review_id)
+
+    return render_template('review/edit_review_form.html', review=review)
+
+
+
 # 게스트 리뷰 수정
-@review_bp.route('/api/review/<int:review_id>', methods=['PATCH'])
+@review_bp.route('/api/review/<int:review_id>', methods=['POST'])
 @jwt_required()
 def update_review(review_id):
     identity = get_jwt_identity()
@@ -134,6 +146,11 @@ def delete_review(review_id):
         db.session.rollback()
         return jsonify({'message': 'Error deleting review.', 'error': str(e)}), 500
     
+# 숙소 리뷰 목록 조회 폼   
+@review_bp.route('/reviews/house/<int:house_id>', methods=['GET'])
+def render_reviews_page(house_id):
+    return render_template('review/review_list.html', house_id=house_id)
+
     
 
 # 숙소 리뷰 목록 조회
@@ -183,44 +200,59 @@ def get_reviews(house_id):
 #     }
 
 #     return jsonify(review_detail), 200
+
+
+# 리뷰 상세 HTML 렌더링
+@review_bp.route('/review/<int:review_id>', methods=['GET'])
+def render_review_detail_page(review_id):
+    # 단순히 HTML 렌더링만 수행
+    return render_template('review/review_detail.html', review_id=review_id)
+
+
+
+# 리뷰 상세
 @review_bp.route('/api/review/<int:review_id>', methods=['GET'])
 def get_review_detail(review_id):
-    # 리뷰 가져오기
     review = Review.query.get_or_404(review_id)
-    
-    # 리뷰 작성자 정보
     guest = Guest.query.get(review.guest_id)
 
-    # 리뷰에 달린 댓글들을 가져옵니다.
     comments = Comment.query.filter_by(review_id=review_id).all()
 
-    # 댓글 정보 준비
     comments_data = []
+    has_comment = False
     if comments:
+        has_comment = True
         for comment in comments:
-            host = Host.query.get(comment.host_id)  # 댓글을 작성한 호스트 정보
+            host = Host.query.get(comment.host_id)
             comments_data.append({
                 'comment_id': comment.id,
-                'host_name': host.name,  # 호스트 이름
+                'host_name': host.name,
                 'content': comment.content,
                 'created_at': comment.created_at.strftime('%Y-%m-%d %H:%M:%S')
             })
-    else:
-        comments_data = []  # 댓글이 없는 경우 빈 리스트로 처리
 
-    # 리뷰 상세 정보
+    house = House.query.get(review.house_id)
+    house_host_id = house.host_id
+
     review_detail = {
         'review_id': review.id,
-        'author': guest.name,  # 작성자 이름
+        'author': guest.name,
         'title': review.title,
         'content': review.content,
         'rating': review.rating,
         'updated_at': review.updated_at.strftime('%Y-%m-%d %H:%M:%S'),
-        'comments': comments_data  # 댓글 데이터 추가
+        'comments': comments_data,
+        'house_host_id': house_host_id,
+        'has_comment': has_comment  # 답변이 있는지 여부 추가
     }
 
     return jsonify(review_detail), 200
 
+
+# 게스트 자신이 작성한 리뷰 목록 조회 (HTML 렌더링)
+@review_bp.route('/guest-reviews', methods=['GET'])
+def render_my_reviews_page():
+    return render_template('review/guest_reviews.html')
 
 
 
