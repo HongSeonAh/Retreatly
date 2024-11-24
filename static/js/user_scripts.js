@@ -43,12 +43,24 @@ document.getElementById("loginForm")?.addEventListener("submit", async (e) => {
     });
     const result = await response.json();
     document.getElementById("loginMessage").innerText = result.message;
+
     if (result.access_token) {
-      localStorage.setItem("jwt_token", result.access_token);
-      // 로그인 성공 시 호스트 숙소 조회 페이지로 리디렉션
+      localStorage.setItem("jwt_token", result.access_token); // 토큰 저장
       console.log(localStorage.getItem("jwt_token"));
 
-      window.location.href = "/host-houses";
+      // 로그인 성공 시 사용자 역할에 따라 리디렉션
+      const user = await fetch(`${apiUrl}/api/auth/me`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("jwt_token")}`,
+        },
+      });
+      const userData = await user.json();
+
+      if (userData.role === "host") {
+        window.location.href = "/host-houses"; // 호스트면 호스트 숙소 페이지로 리디렉션
+      } else if (userData.role === "guest") {
+        window.location.href = "/houses"; // 게스트면 전체 숙소 목록 페이지로 리디렉션
+      }
     }
   } catch (error) {
     console.error("Error:", error);
