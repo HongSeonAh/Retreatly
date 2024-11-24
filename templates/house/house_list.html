@@ -8,6 +8,10 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/house_list.css') }}"
     />
+    <script
+      defer
+      src="{{ url_for('static', filename='js/house_list.js') }}"
+    ></script>
   </head>
   <body>
     <div class="container">
@@ -17,6 +21,11 @@
       </header>
 
       <main>
+        <!-- 마이페이지 버튼 -->
+        <div class="my-page-button">
+          <button id="myPageButton">마이페이지</button>
+        </div>
+
         <table class="house-table">
           <thead>
             <tr>
