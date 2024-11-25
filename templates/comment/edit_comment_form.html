@@ -17,6 +17,8 @@
     <h1>답변 수정</h1>
     <form id="editCommentForm">
       <input type="hidden" id="commentId" value="{{ comment.id }}" />
+      <input type="hidden" id="reviewId" value="{{ comment.review_id }}" />
+
       <label for="content">답변 내용:</label>
       <textarea id="content" name="content" rows="5" required>
 {{ comment.content }}</textarea

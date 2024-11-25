@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const editCommentForm = document.getElementById("editCommentForm");
   const contentInput = document.getElementById("content");
   const commentId = document.getElementById("commentId").value;
+  const reviewId = document.getElementById("reviewId").value;
   const messageElement = document.getElementById("editCommentMessage");
 
   if (!token) {
@@ -29,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (response.ok) {
         alert("답변이 성공적으로 수정되었습니다!");
-        window.location.href = `/reviews/house/${reviewId}`;
+        window.location.href = `/review/${reviewId}`;
       } else {
         messageElement.style.color = "red";
         messageElement.textContent = `오류: ${data.message}`;

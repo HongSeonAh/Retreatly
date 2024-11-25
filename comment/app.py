@@ -18,7 +18,9 @@ def render_comment_form(review_id):
 @comment_bp.route('/comment-form/edit/<int:comment_id>', methods=['GET'])
 def render_edit_comment_form(comment_id):
     comment = Comment.query.get_or_404(comment_id)
-    return render_template('comment/edit_comment_form.html', comment=comment)
+    review_id = comment.review_id  # Comment 모델에 review_id가 있다고 가정
+    return render_template('comment/edit_comment_form.html', comment=comment, review_id=review_id)
+
 
 
 # 답변 생성
