@@ -1,5 +1,5 @@
 import os
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, redirect, render_template, request, url_for
 from flask_jwt_extended import JWTManager, get_jwt_identity, jwt_required
 from flask_cors import CORS
 from admin.app import admin_bp
@@ -14,7 +14,7 @@ from comment.app import comment_bp
 app = Flask(__name__)
 
 # 데이터베이스 설정
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://retreatly:1234@localhost/retreatly'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://madang:madang@localhost/madangdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # JWT 설정
@@ -57,7 +57,8 @@ app.register_blueprint(comment_bp)
 
 @app.route('/')
 def hello_world():
-    return 'Hello World!'
+    return redirect(url_for('users.loginForm'))
+
 
 @app.route('/api/validate-token', methods=['POST'])
 @jwt_required()
